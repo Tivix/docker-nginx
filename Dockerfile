@@ -7,6 +7,7 @@ RUN pip install j2cli
 ADD nginx.conf.j2 /nginx.conf.j2
 ADD nginx-site.conf.j2 /nginx-site.conf.j2
 ADD uwsgi_params /uwsgi_params
+ADD index.html.j2 /index.html.j2
 ADD entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh

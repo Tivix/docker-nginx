@@ -22,8 +22,11 @@ server {
       {% if USE_UWSGI is defined %}
       uwsgi_pass http://{{ UPSTREAM_BACKEND_NAME|default('local_backend', true) }};
       include /etc/nginx/conf.d/uwsgi_params;
-      {% else %}
+      {% elif USE_PROXY_PASS is defined and USE_PROXY_PASS == 'true' %}
       proxy_pass http://{{ PROXY_TARGET_URL|default('localhost', true) }}:{{ PROXY_TARGET_PORT|default(8080, true) }};
+      {% else %}
+      root /var/www/localhost/htdocs;
+      index index.html;
       {% endif %}
     }
 }

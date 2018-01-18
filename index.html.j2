@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>docker-nginx</title>
+</head>
+<body>
+	<div style="text-align:center">
+    	<h1>Nginx proxy</h1>
+    	<p>If you can see this page, it means that your docker-nginx container is up but you haven't set any proxy mode</p>
+	</div>
+    <h2>Current settings:</h2>
+    <ol>
+    	<ul>UPSTREAM_BACKEND_NAME={{ UPSTREAM_BACKEND_NAME|default('local_backend', true) }}</ul>
+		<ul>UPSTREAM_BACKEND_URL={{ UPSTREAM_BACKEND_URL|default('localhost', true) }}</ul>
+		<ul>UPSTREAM_BACKEND_PORT={{ UPSTREAM_BACKEND_PORT|default(8000, true) }}</ul>
+		<ul>UPSTREAM_BACKEND_TIMEOUT={{ UPSTREAM_BACKEND_TIMEOUT|default(5, true) }}</ul>
+		<ul>UPSTREAM_BACKEND_FAILS={{ UPSTREAM_BACKEND_FAILS|default(6, true) }}</ul>
+		<ul>NGINX_PORT={{ NGINX_PORT|default(80, true) }}</ul>
+		<ul>NGINX_SERVER_NAME={{ NGINX_SERVER_NAME|default('_', true) }}</ul>
+		<ul>PROXY_TARGET_URL={{ PROXY_TARGET_URL|default('localhost', true) }}</ul>
+		<ul>PROXY_TARGET_PORT={{ PROXY_TARGET_PORT|default(8080, true) }}</ul>
+		{% if USE_UWSGI is defined %}
+		<ul>USE_UWSGI={{ USE_UWSGI }}</ul>
+		{% else %}
+		<ul>USE_UWSGI=false</ul>
+		{% endif %}
+		{% if USE_STATICS is defined %}
+		<ul>USE_STATICS={{ USE_STATICS }}</ul>
+		{% else %}
+		<ul>USE_STATICS=false</ul>
+		{% endif %}
+		{% if USE_PROXY_PASS is defined %}
+		<ul>USE_PROXY_PASS={{USE_PROXY_PASS}}</ul>
+		{% else %}
+		<ul>USE_PROXY_PASS=false</ul>
+		{% endif %}
+    </ol>
+</body>
+</html>

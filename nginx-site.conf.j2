@@ -19,10 +19,10 @@ server {
       proxy_set_header Host $host:$server_port;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      {{% if USE_UWSGI == 'true'}}
+      {{% if USE_UWSGI == 'true' %}}
         uwsgi_pass {{ UPSTREAM_BACKEND }};
         include /etc/nginx/conf.d/uwsgi_params;
-      {{$ else %%}}
+      {{% else %}}
         proxy_pass http://{{ PROXY_TARGET_URL|default('localhost', true) }}:{{ PROXY_TARGET_PORT|default(8080, true) }};
       {{% endif %}}
     }

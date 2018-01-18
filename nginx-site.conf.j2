@@ -2,13 +2,13 @@
   upstream {{ UPSTREAM_BACKEND|default('localhost', true) }} {
     server {{ UPSTREAM_BACKEND }}:{{ UPSTREAM_BACKEND_PORT}} fail_timeout={{ UPSTREAM_BACKEND_TIMEOUT|default(5, true) }}s max_fails={{ UPSTREAM_BACKEND_FAILS|default(6, true) }};
   }
-{{$ endif %}}
+{{% endif %}}
 
 server {
     listen      0.0.0.0:{{ NGINX_PORT|default(80, true) }} default_server;
     server_name  {{ NGINX_SERVER_NAME|DEFAULT('_', true) }};
 
-    {{% if USE_STATICS == 'true' and USE_UWSGI == 'true'}}
+    {{% if USE_STATICS == 'true' and USE_UWSGI == 'true' %}}
       location /static {
           alias /data/staticserve;
           expires 1d;

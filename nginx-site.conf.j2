@@ -1,0 +1,29 @@
+{{% if USE_UWSGI == 'true'}}
+  upstream {{ UPSTREAM_BACKEND|default('localhost', true) }} {
+    server {{ UPSTREAM_BACKEND }}:{{ UPSTREAM_BACKEND_PORT}} fail_timeout={{ UPSTREAM_BACKEND_TIMEOUT|default(5, true) }}s max_fails={{ UPSTREAM_BACKEND_FAILS|default(6, true) }};
+  }
+{{$ endif %}}
+
+server {
+    listen      0.0.0.0:{{ NGINX_PORT|default(80, true) }} default_server;
+    server_name  {{ NGINX_SERVER_NAME|DEFAULT('_', true) }};
+
+    {{% if USE_STATICS == 'true' and USE_UWSGI == 'true'}}
+      location /static {
+          alias /data/staticserve;
+          expires 1d;
+      }
+    {{% endif %}}
+
+    location / {
+      proxy_set_header Host $host:$server_port;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      {{% if USE_UWSGI == 'true'}}
+        uwsgi_pass {{ UPSTREAM_BACKEND }};
+        include /etc/nginx/conf.d/uwsgi_params;
+      {{$ else %%}}
+        proxy_pass http://{{ PROXY_TARGET_URL|default('localhost', true) }}:{{ PROXY_TARGET_PORT|default(8080, true) }};
+      {{% endif %}}
+    }
+}

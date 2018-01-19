@@ -1,6 +1,6 @@
 FROM alpine:3.7
 
-RUN apk add --update-cache nginx py-pip bash curl
+RUN apk add --update-cache nginx py-pip bash curl openssl
 
 RUN pip install j2cli
 

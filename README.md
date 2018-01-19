@@ -22,3 +22,15 @@ PROXY_TARGET_PORT=8080
 USE_UWSGI=false
 USE_STATICS=false
 USE_PROXY_PASS=false
+
+Options
+-------
+# turn on internal nginx stats
+USE_STATS=false
+STATS_PORT=9080
+
+# turn on OAUTH option _/use in connection with external OAUTH container/_
+USE_OAUTH=false
+OAUTH_URL=127.0.0.1
+OAUTH_PORT=4180
+OAUTH_NGINX_PORT=80

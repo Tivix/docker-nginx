@@ -1,0 +1,18 @@
+version: '1.0'
+
+steps:
+
+    build_nginx:
+        type: build
+        image_name: tivix/docker-nginx
+        dockerfile: Dockerfile
+        working_directory: ${{main_clone}}
+        tag: ${{CF_BRANCH}}
+            
+    push_to_registry:
+        type: push
+        title: Pushing image to registry
+        candidate: ${{build_nginx}}
+        registry: dockerhub
+        tags:
+            - latest

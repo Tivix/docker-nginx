@@ -25,6 +25,11 @@ USE_PROXY_PASS=false
 
 Options
 -------
+$ basic auth
+USE_AUTH=false
+AUTH_USER=
+AUTH_PASS=
+
 # turn on internal nginx stats
 USE_STATS=false
 STATS_PORT=9080

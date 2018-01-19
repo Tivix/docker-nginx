@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-if [ $AUTH = "true" ]; then 
+if [ $AUTH -eq "true" ]; then 
 	printf "$AUTH_USER:$(openssl passwd -crypt $AUTH_PASS)\n" >> /etc/nginx/htpasswd
 fi
 

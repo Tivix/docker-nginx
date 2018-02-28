@@ -11,11 +11,13 @@ Variables
 _/vars with default values/_
 
 - UPSTREAMS="name:url:port" (accepts multiple values /comma separated/; it also assumes that upstream is served by uwsgi)
+- UPSTREAMS_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from UPSTREAMS)
 - UPSTREAMS_TIMEOUT=5 (default)
 - UPSTREAMS_FAILS=6 (default)
 - NGINX_PORT=80 (default)
 - NGINX_SERVER_NAME=_ (default)
 - PROXY_TARGETS="url:port" (accepts multiple values /comma separated/)
+- PROXY_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from PROXY_TARGETS )
 - STATICS=false (hardcoded static files location to use with uwsgi/django)
 - STATS=false (internal nginx_stats on/off)
 - USE_AUTH=false (basic auth on/off)

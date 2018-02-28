@@ -25,16 +25,16 @@ _/vars with default values/_
 Options
 -------
 
-# basic auth
+### basic auth
 - USE_AUTH=false
 - AUTH_USER=
 - AUTH_PASS=
 
-# turn on internal nginx stats
+### turn on internal nginx stats
 - USE_STATS=false
 - STATS_PORT=9080
 
-# turn on OAUTH option _/use in connection with external OAUTH container/_
+### turn on OAUTH option _/use in connection with external OAUTH container/_
 - USE_OAUTH=false
 - OAUTH_URL=127.0.0.1
 - OAUTH_PORT=4180

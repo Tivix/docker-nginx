@@ -10,32 +10,32 @@ Variables
 
 _/vars with default values/_
 
-UPSTREAM_BACKEND_NAME=local_backend
-UPSTREAM_BACKEND_URL=localhost
-UPSTREAM_BACKEND_PORT=8000
-UPSTREAM_BACKEND_TIMEOUT=5s
-UPSTREAM_BACKEND_FAILS=6
-NGINX_PORT=80
-NGINX_SERVER_NAME='_'
-PROXY_TARGET_URL=localhost
-PROXY_TARGET_PORT=8080
-USE_UWSGI=false
-USE_STATICS=false
-USE_PROXY_PASS=false
+- UPSTREAMS="name:url:port" (accepts multiple values /comma separated/; it also assumes that upstream is served by uwsgi)
+- UPSTREAMS_TIMEOUT=5 (default)
+- UPSTREAMS_FAILS=6 (default)
+- NGINX_PORT=80 (default)
+- NGINX_SERVER_NAME=_ (default)
+- PROXY_TARGETS="url:port" (accepts multiple values /comma separated/)
+- STATICS=false (hardcoded static files location to use with uwsgi/django)
+- STATS=false (internal nginx_stats on/off)
+- USE_AUTH=false (basic auth on/off)
+- AUTH_USER="user_name"
+- AUTH_PASS="password"
 
 Options
 -------
-$ basic auth
-USE_AUTH=false
-AUTH_USER=
-AUTH_PASS=
 
-# turn on internal nginx stats
-USE_STATS=false
-STATS_PORT=9080
+### basic auth
+- USE_AUTH=false
+- AUTH_USER=
+- AUTH_PASS=
 
-# turn on OAUTH option _/use in connection with external OAUTH container/_
-USE_OAUTH=false
-OAUTH_URL=127.0.0.1
-OAUTH_PORT=4180
-OAUTH_NGINX_PORT=80
+### turn on internal nginx stats
+- USE_STATS=false
+- STATS_PORT=9080
+
+### turn on OAUTH option _/use in connection with external OAUTH container/_
+- USE_OAUTH=false
+- OAUTH_URL=127.0.0.1
+- OAUTH_PORT=4180
+- OAUTH_NGINX_PORT=80

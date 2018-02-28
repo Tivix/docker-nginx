@@ -5,6 +5,16 @@ Nginx based proxy meant to work with uwsgi upstream or proxy_pass
 
 [![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=Tivix&repoName=docker-nginx&branch=master&pipelineName=docker-nginx&accountName=tivix&key=eyJhbGciOiJIUzI1NiJ9.NTgzNDViNTkyZWRiOGYwMTAwZTllYWNk.N-gEtemnze6Sz5dmxpN0dcZ8Ev6oSdyiXDpbCy_TClI&type=cf-1)]( https://g.codefresh.io/repositories/Tivix/docker-nginx/builds?filter=trigger:build;branch:master;service:5a6097ecd6addc0001813e45~docker-nginx)
 
+USAGE
+-----
+`docker run -d -p 9080:80 tivix/docker-nginx`
+will start nginx server and server static help page
+
+`docker run -d -p 9080:80 -e "PROXY_TARGETS=target1:8080,target2:8081" -e "PROXY_LOCATIONS=/,target2" tivix/docker-nginx`
+will start nginx and create two location blocks:
+- one for root (where forward to target1 host will be put)
+- second for target2 (where forward to target2 host will be put)
+
 Variables
 ---------
 

@@ -1,10 +1,14 @@
-{% if USE_UWSGI is defined and USE_UWSGI == 'true' %}
-  upstream {{ UPSTREAM_BACKEND_NAME|default('local_backend', true) }} {
-    server {{ UPSTREAM_BACKEND_URL|default('localhost', true) }}:{{ UPSTREAM_BACKEND_PORT|default(8000, true)}} fail_timeout={{ UPSTREAM_BACKEND_TIMEOUT|default(5, true) }}s max_fails={{ UPSTREAM_BACKEND_FAILS|default(6, true) }};
+{% if UPSTREAMS is defined %}
+{% set upstream_list = UPSTREAMS.split(',') %}
+{% for up in upstream_list %}
+{% set target = up.split(':') %}
+  upstream {{ target[0] }} {
+    server {{ target[1] }}:{{target[2]}} fail_timeout={{ UPSTREAMS_TIMEOUT|default(5, true) }}s max_fails={{ UPSTREAMS_FAILS|default(6, true) }};
   }
+{% endfor %}
 {% endif %}
 
-{% if USE_STATS is defined and USE_STATS == 'true' %}
+{% if STATS is defined and STATS == 'true' %}
 server {
     listen {{ STATS_PORT|default(9080, true) }};
     server_name 127.0.0.1;
@@ -19,6 +23,7 @@ server {
 }
 {% endif %}
 
+{#
 {% if USE_OAUTH is defined and USE_OAUTH == 'true' %}
 server {
     listen 0.0.0.0:{{ OAUTH_NGINX_PORT|default(80, true) }} default_server;
@@ -37,12 +42,12 @@ server {
   }
 }
 {% endif %}
-
+#}
 server {
     listen      0.0.0.0:{{ NGINX_PORT|default(80, true) }} default_server;
     server_name  {{ NGINX_SERVER_NAME|default('_', true) }};
 
-    {% if USE_STATICS is defined and USE_STATICS == 'true' %}
+    {% if STATICS is defined and STATICS == 'true' %}
     location /static {
         alias /data/staticserve;
         expires 1d;
@@ -54,18 +59,41 @@ server {
     auth_basic_user_file /etc/nginx/htpasswd;
     {% endif %}
 
+    {% if UPSTREAMS is defined %}
+    {% set location_list = UPSTREAMS_LOCATIONS.split(',') %}
+    {% for loc in location_list %}
+    {% set mainloop = loop %}
+    location {{ loc|default('/', true) }} {
+      proxy_set_header Host $host:$server_port;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      {% set upstream_list = UPSTREAMS.split(',') %}
+      {% for up in upstream_list %}
+      {% set target = up.split(':') %}
+      uwsgi_pass http://{{ target[0] }};
+      include /etc/nginx/conf.d/uwsgi_params;
+      {% endfor %}
+    {% endfor %}
+    {% endif %}
+      
+
+    {% if PROXY_TARGETS is defined %}
     location / {
       proxy_set_header Host $host:$server_port;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      {% if USE_UWSGI is defined %}
-      uwsgi_pass http://{{ UPSTREAM_BACKEND_NAME|default('local_backend', true) }};
-      include /etc/nginx/conf.d/uwsgi_params;
-      {% elif USE_PROXY_PASS is defined and USE_PROXY_PASS == 'true' %}
-      proxy_pass http://{{ PROXY_TARGET_URL|default('localhost', true) }}:{{ PROXY_TARGET_PORT|default(8080, true) }};
-      {% else %}
+      {% set proxy_list = PROXY_TARGET.split(',') %}
+      {% for p in proxy_list %}
+      {% set target_list = p.split(':') %}
+        proxy_pass http://{{ target_list[0]|default('localhost'. true) }}:{{ target_list[1]|default('8080', true)  }};
+      {% endfor %}
+    }
+    {% endif %}
+
+    {% if PROXY_TARGET is not defined or UPSTREAMS is not defined %}
+    location / {
       root /var/www/localhost/htdocs;
       index index.html;
-      {% endif %}
     }
+    {% endif %}
 }

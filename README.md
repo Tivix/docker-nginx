@@ -3,7 +3,7 @@ docker-nginx
 
 Nginx based proxy meant to work with uwsgi upstream or proxy_pass
 
-[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=Tivix&repoName=docker-nginx&branch=master&pipelineName=docker-nginx&accountName=tivix&key=eyJhbGciOiJIUzI1NiJ9.NTgzNDViNTkyZWRiOGYwMTAwZTllYWNk.N-gEtemnze6Sz5dmxpN0dcZ8Ev6oSdyiXDpbCy_TClI&type=cf-1)]( https://g.codefresh.io/repositories/Tivix/docker-nginx/builds?filter=trigger:build;branch:master;service:5a6097ecd6addc0001813e45~docker-nginx)
+[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=Tivix&repoName=docker-nginx&branch=master&pipelineName=tivix%2Fdocker-nginx&accountName=tivix&type=cf-1)]( https://g.codefresh.io/repositories/Tivix/docker-nginx/builds?filter=trigger:build;branch:master;service:5a6097ecd6addc0001813e45~tivix/docker-nginx)
 
 USAGE
 -----

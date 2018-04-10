@@ -10,6 +10,10 @@ ADD uwsgi_params /uwsgi_params
 ADD index.html.j2 /index.html.j2
 ADD entrypoint.sh /entrypoint.sh
 
+ENV WAITFORIT_VERSION="v2.2.0"
+RUN curl -o /usr/local/bin/waitforit -sSL https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 && \
+    chmod +x /usr/local/bin/waitforit
+
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 80

@@ -8,6 +8,10 @@
 {% endfor %}
 {% endif %}
 
+{% if FLOOD is defined and FLOOD == 'true' %}
+    limit_req_zone $binary_remote_addr zone=flood:10m rate={{ FLOOD_RATE|default('5', true) }}r/s;
+{% endif %}
+
 {% if STATS is defined and STATS == 'true' %}
 server {
     listen {{ STATS_PORT|default(9080, true) }};
@@ -46,10 +50,6 @@ server {
 server {
     listen      0.0.0.0:{{ NGINX_PORT|default(80, true) }} default_server;
     server_name  {{ NGINX_SERVER_NAME|default('_', true) }};
-
-    {% if FLOOD is defined and FLOOD == 'true' %}
-    limit_req_zone $binary_remote_addr zone=flood:10m rate={{ FLOOD_RATE|default('5', true) }}r/s;
-    {% endif %}
 
     {% if DROP_PHP is defined and DROP_PHP == 'true' %}
     location ~ \.php {

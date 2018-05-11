@@ -14,7 +14,10 @@
 
 {% if REAL_IP is defined and REAL_IP == 'true' %}
     real_ip_header X-Forwarded-For;
-    set_real_ip_from {{ REAL_IP_CIDR }};
+{% set cidrs = REAL_IP_CIDR.spli(',') %}
+{% for cidr in cidrs %}
+    set_real_ip_from {{ cidr }};
+{% endfor %}
 {% endif %}
 
 {% if STATS is defined and STATS == 'true' %}

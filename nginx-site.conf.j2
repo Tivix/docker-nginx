@@ -60,6 +60,17 @@ server {
     listen      0.0.0.0:{{ NGINX_PORT|default(80, true) }} default_server;
     server_name  {{ NGINX_SERVER_NAME|default('_', true) }};
 
+    {% if ELB_HC is defined and ELB_HC == 'true' %}
+    location /elb-status {
+      access_log off;
+      return 200 'A-OK!';
+      # because default content-type is application/octet-stream,
+      # browser will offer to "save the file"...
+      # the next line allows you to see it in the browser so you can test 
+      add_header Content-Type text/plain;
+    }
+    {% endif %}
+
     {% if DROP_PHP is defined and DROP_PHP == 'true' %}
     location ~ \.php {
       deny all;

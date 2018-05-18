@@ -23,7 +23,7 @@
 
 {% if STATS is defined and STATS == 'true' %}
 server {
-  {% if CLIENT_BODY_SIZE is defined%}
+  {% if CLIENT_BODY_SIZE is defined %}
     client_max_body_size {{ CLIENT_BODY_SIZE }};
   {% endif %}
     listen {{ STATS_PORT|default(9080, true) }};

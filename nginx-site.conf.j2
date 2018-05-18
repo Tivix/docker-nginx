@@ -8,6 +8,10 @@
 {% endfor %}
 {% endif %}
 
+{% if CLIENT_BODY_SIZE is defined%}
+client_max_body_size={{ CLIENT_BODY_SIZE }};
+{% endif %}
+
 {% if FLOOD is defined and FLOOD == 'true' %}
     limit_req_zone $binary_remote_addr zone=flood:10m rate={{ FLOOD_RATE|default('5', true) }}r/s;
 {% endif %}

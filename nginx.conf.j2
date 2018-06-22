@@ -28,7 +28,7 @@ http {
 
 {% if GZIP is defined and GZIP == 'true' %}
     gzip  on;
-    gzip_types text/plain text/css text/xml text/javascript application/javascript application/x-javascript application/xml;
+    gzip_types text/plain text/css text/xml text/javascript application/javascript application/x-javascript application/xml application/json;
 {% endif %}
 
     include /etc/nginx/conf.d/*.conf;

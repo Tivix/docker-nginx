@@ -28,7 +28,7 @@ _/vars with default values/_
 - NGINX_SERVER_NAME=_ (default)
 - PROXY_TARGETS="url:port" (accepts multiple values /comma separated/)
 - PROXY_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from PROXY_TARGETS )
-- STATICS=false (hardcoded static files location to use with uwsgi/django)
+- STATIC_VOLUMES=/static:/data/staticserve (accepts multiple values /comma separated/;)
 - STATS=false (internal nginx_stats on/off)
 - USE_AUTH=false (basic auth on/off)
 - AUTH_USER="user_name"
@@ -45,9 +45,3 @@ Options
 ### turn on internal nginx stats
 - USE_STATS=false
 - STATS_PORT=9080
-
-### turn on OAUTH option _/use in connection with external OAUTH container/_
-- USE_OAUTH=false
-- OAUTH_URL=127.0.0.1
-- OAUTH_PORT=4180
-- OAUTH_NGINX_PORT=80

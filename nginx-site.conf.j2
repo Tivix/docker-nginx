@@ -82,7 +82,7 @@ server {
     {% endif %}
 
     {% if STATICS is defined and STATICS == 'true' %}
-    location /static {
+    location /{{ STATICS_LOCATION|default(statics, true) }} {
         alias /data/staticserve;
         expires 1d;
     }

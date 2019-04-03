@@ -22,7 +22,8 @@
 		<ul>NGINX_SERVER_NAME=_ (default)</ul>
 		<ul>PROXY_TARGETS="url:port" (accepts multiple values /comma separated/)</ul>
 		<ul>PROXY_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from PROXY_TARGETS)</ul>
-		<ul>STATICS=false (hardcoded static files location to use with uwsgi/django)</ul>
+		<ul>STATICS=false</ul>
+		<ul>STATICS_LOCATION=statics</ul>
 		<ul>STATS=false (internal nginx_stats on/off)</ul>
 		<ul>USE_AUTH=false (basic auth on/off)</ul>
 		<ul>USE_HTTPS_REDIR=false</ul>

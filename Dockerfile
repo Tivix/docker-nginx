@@ -1,4 +1,4 @@
-FROM alpine:3.7
+FROM alpine:3.9
 
 RUN apk add --update-cache nginx py-pip bash curl openssl
 

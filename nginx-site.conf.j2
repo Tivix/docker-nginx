@@ -105,7 +105,7 @@ server {
     {% set upstream_list = UPSTREAMS.split(',') %}
     {% set target = upstream_list[loop.index0].split(':') %}
     location {{ loc|default('/', true) }} {
-      proxy_set_header Host $host:$server_port;
+      proxy_set_header Host $host;
       proxy_set_header X-Real-IP $remote_addr;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       uwsgi_pass {{ target[0] }};

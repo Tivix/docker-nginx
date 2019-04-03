@@ -15,4 +15,5 @@ steps:
         candidate: ${{build_nginx}}
         registry: dockerhub
         tags:
-            - latest
+            - ${{CF_BRANCH}}
+            - ${{CF_SHORT_REVISION}}

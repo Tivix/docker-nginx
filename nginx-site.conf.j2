@@ -131,6 +131,9 @@ server {
       {% if FLOOD is defined and FLOOD == 'true' %}
       limit_req zone=flood nodelay;
       {% endif %}
+      {% if BUFFER_OFF is defined and BUFFER_OFF == 'true' %}
+      proxy_buffering off;
+      {% endif %}
     }
     {% endfor %}
     {% endif %}

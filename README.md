@@ -34,6 +34,7 @@ _/vars with default values/_
 - USE_AUTH=false (basic auth on/off)
 - AUTH_USER="user_name"
 - AUTH_PASS="password"
+- BUFFER_OFF="false" (if true it disables proxy_buffering)
 
 Options
 -------

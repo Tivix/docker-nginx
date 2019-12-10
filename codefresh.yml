@@ -28,8 +28,9 @@ steps:
     candidate: ${{build_image}}
     tags:
       - latest
-      - ${VERSION}
+      - prod
     when:
-      branch:
-        only:
-          - master
+    condition:
+      all:
+        noSkipCiInCommitMessage: 'includes(lower("${{CF_COMMIT_MESSAGE}}"), "release") == true'
+        masterBranch: '"${{CF_BRANCH}}" == "master"'

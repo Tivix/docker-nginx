@@ -24,7 +24,6 @@ steps:
 
   push_image:
     stage: push
-    image: tivix/docker-nginx
     candidate: ${{build_image}}
     tags:
       - latest

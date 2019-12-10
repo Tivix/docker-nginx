@@ -30,7 +30,7 @@ steps:
       - latest
       - prod
     when:
-    condition:
-      all:
-        noSkipCiInCommitMessage: 'includes(lower("${{CF_COMMIT_MESSAGE}}"), "release") == true'
-        masterBranch: '"${{CF_BRANCH}}" == "master"'
+      condition:
+        all:
+          noSkipCiInCommitMessage: 'includes(lower("${{CF_COMMIT_MESSAGE}}"), "release") == true'
+          masterBranch: '"${{CF_BRANCH}}" == "master"'

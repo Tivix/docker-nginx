@@ -1,20 +1,13 @@
 version: '1.0'
 
-stages:
-  - clone
-  - build
-  - push
-
 steps:
   main_clone:
-    stage: clone
     title: Cloning main repository
     type: git-clone
     repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: '${{CF_REVISION}}'
 
   build_image:
-    stage: build
     type: build
     image_name: tivix/docker-nginx
     working_directory: ${{main_clone}}
@@ -23,8 +16,9 @@ steps:
     progress: tty
 
   push_image:
-    stage: push
+    type: push
     candidate: ${{build_image}}
+    registry: dockerhub
     tags:
       - latest
       - prod-v2.0

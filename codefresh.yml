@@ -1,19 +1,35 @@
 version: '1.0'
 
-steps:
+stages:
+  - clone
+  - build
+  - push
 
-    build_nginx:
-        type: build
-        image_name: tivix/docker-nginx
-        dockerfile: Dockerfile
-        working_directory: ${{main_clone}}
-        tag: ${{CF_BRANCH}}
-            
-    push_to_registry:
-        type: push
-        title: Pushing image to registry
-        candidate: ${{build_nginx}}
-        registry: dockerhub
-        tags:
-            - ${{CF_BRANCH}}
-            - ${{CF_SHORT_REVISION}}
+steps:
+  main_clone:
+    stage: clone
+    title: Cloning main repository
+    type: git-clone
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
+    revision: '${{CF_REVISION}}'
+
+  build_image:
+    stage: build
+    type: build
+    image_name: tivix/docker-nginx
+    working_directory: ${{main_clone}}
+    dockerfile: Dockerfile
+    tag: ${{CF_SHORT_REVISION}}
+    progress: tty
+
+  push_image:
+    stage: push
+    image: tivix/docker-nginx
+    candidate: ${{build_image}}
+    tags:
+      - latest
+      - ${VERSION}
+    when:
+      branch:
+        only:
+          - master

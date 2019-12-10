@@ -28,7 +28,7 @@ steps:
     candidate: ${{build_image}}
     tags:
       - latest
-      - prod
+      - prod-v2.0
     when:
       condition:
         all:

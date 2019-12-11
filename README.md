@@ -35,6 +35,7 @@ _/vars with default values/_
 - AUTH_USER="user_name"
 - AUTH_PASS="password"
 - BUFFER_OFF="false" (if true it disables proxy_buffering)
+- REAL_IP
 
 Options
 -------

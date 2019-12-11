@@ -21,7 +21,7 @@ steps:
     registry: dockerhub
     tags:
       - latest
-      - prod-v2.1
+      - prod-v2.2
     when:
       condition:
         all:

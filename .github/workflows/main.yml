@@ -2,8 +2,6 @@ name: docker-nginx
 
 on:
   push:
-    branches:
-      - master
     tags:
       - v*
 
@@ -20,7 +18,7 @@ jobs:
       - name: Push
         run: |
           echo "${{ secrets.DOCKER_HUB_PASS }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-          [ ${GITHUB_REF##*/} == "master" ] && TAG="latest" || TAG=${GITHUB_REF##*/}
+          TAG=${GITHUB_REF##*/}
           echo "Pushing tag: ${TAG}"
           docker tag tivix/docker-nginx tivix/docker-nginx:${TAG}
           docker push tivix/docker-nginx:${TAG}

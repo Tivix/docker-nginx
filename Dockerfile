@@ -1,22 +1,20 @@
-FROM alpine:3.9
+FROM alpine:3.11
 
-RUN apk add --update-cache nginx py-pip bash curl openssl
+RUN apk add --no-cache\
+    nginx~=1.16 \
+    py3-pip \
+    curl \
+    openssl &&\
+    pip3 install --no-cache-dir \
+    j2cli==0.3.10 \
+    boto3==1.12.26 &&\
+    curl -o /usr/local/bin/waitforit -sSL https://github.com/maxcnunes/waitforit/releases/download/v2.4.1/waitforit-linux_amd64 && \
+    chmod +x /usr/local/bin/waitforit &&\
+    rm -rf /etc/nginx/nginx.conf /etc/nginx/conf.d/*
 
-RUN pip install j2cli
-
-ADD nginx.conf.j2 /nginx.conf.j2
-ADD nginx-site.conf.j2 /nginx-site.conf.j2
-ADD uwsgi_params /uwsgi_params
-ADD index.html.j2 /index.html.j2
-ADD entrypoint.sh /entrypoint.sh
-
-ENV WAITFORIT_VERSION="v2.2.0"
-RUN curl -o /usr/local/bin/waitforit -sSL https://github.com/maxcnunes/waitforit/releases/download/$WAITFORIT_VERSION/waitforit-linux_amd64 && \
-    chmod +x /usr/local/bin/waitforit
-
-RUN chmod +x /entrypoint.sh
+COPY ./ /code/
+COPY docker-entrypoint.sh aws_sm /usr/local/bin/
 
 EXPOSE 80
 
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["docker-entrypoint.sh"]

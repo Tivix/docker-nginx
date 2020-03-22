@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+import boto3
+import json
+import os
+import argparse
+
+def get_secret(secret_name, path):
+    client = boto3.client(service_name="secretsmanager")
+    secret = json.loads(client.get_secret_value(SecretId=path)["SecretString"])[secret_name]
+
+    if not secret:
+        raise Exception(f"Couldnt obtain {secret_name} from AWS Secrets Manager.")
+    else:
+        return secret
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--path", help="AWS Secrets Manager path", required=True)
+    parser.add_argument("-k", "--key", help="AWS Secrets Manager key", required=True)
+    args = parser.parse_args()
+
+    print(get_secret(args.key, args.path))

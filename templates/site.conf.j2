@@ -1,0 +1,134 @@
+{%- if UPSTREAMS %}
+{%- for upstream in UPSTREAMS.split(',') -%}
+{% set upstream_parts = upstream.split(':') %}
+upstream {{loop.index}}_{{upstream_parts[1]}} {
+  server {{upstream_parts[1]}}:{{upstream_parts[2]}}{% if UPSTREAMS_TIMEOUT %} fail_timeout={{ UPSTREAMS_TIMEOUT }}{% endif %}{% if UPSTREAMS_FAILS %} max_fails={{ UPSTREAMS_FAILS }}{% endif %};
+}
+{% endfor %}
+{%- endif %}
+{%- if FLOOD == 'true' %}
+limit_req_zone $binary_remote_addr zone=flood:10m rate={{ env('FLOOD_RATE', "5") }}r/s;
+{% endif %}
+{%- if STATS == 'true' or HEALTHCHECK == 'true' %}
+server {
+  {%- if STATS_PORT %}
+  listen 127.0.0.1:{{ env('STATS_PORT', '8080') }};
+  {%- elif HEALTHCHECK_PORT %}
+  listen 127.0.0.1:{{ env('HEALTHCHECK_PORT', '8080') }};
+  {%- else %}
+  listen 127.0.0.1:8080;
+  {% endif %}
+
+  {%- if STATS == 'true' %}
+  # nginx stats for monitoring
+  location /nginx_status {
+    stub_status on;       # Turn on nginx stats
+    access_log   off;     # We do not need logs for stats
+    allow 127.0.0.1;      # Security: Only allow access from IP
+    deny all;             # Deny requests from the other of the world
+  }
+  {%- endif %}
+  {%- if HEALTHCHECK == 'true' %}
+  # nginx healthcheck
+  location /nginx_health {
+    access_log off;
+    return 200;
+  }
+  {%- endif %}
+}
+{%- endif %}
+
+{%- if HTTPS_REDIRECT == 'true' and DEV_SSL_CERT == 'true' %}
+server {
+  listen 0.0.0.0:80;
+  return 301 https://$host$request_uri;
+}
+{%- endif %}
+
+{%- if MICROCACHE == 'true' %}
+proxy_cache_path /cache levels=1:2 keys_zone=microcache:100m max_size=100m inactive=1h use_temp_path=off;
+{%- endif %}
+
+server {
+  {%- if not (HTTPS_REDIRECT == 'true' and DEV_SSL_CERT == 'true') %}
+  listen      0.0.0.0:{{ env('NGINX_PORT', '80') }} default_server;
+  {%- endif %}
+  {%- if DEV_SSL_CERT == 'true' %}
+  listen      0.0.0.0:{{ env('NGINX_HTTPS_PORT', '443') }} ssl;
+  ssl_certificate certs/localhost.pem;
+  ssl_certificate_key certs/localhost-key.pem;
+  {%- endif %}
+  {%- if NGINX_SERVER_NAME %}
+  server_name {{ NGINX_SERVER_NAME }};
+  {%- endif %}
+  {%- if ELB_HC == 'true' %}
+  location /elb-status {
+    access_log off;
+    return 200 'A-OK!';
+    # because default content-type is application/octet-stream,
+    # browser will offer to "save the file"...
+    # the next line allows you to see it in the browser so you can test
+    add_header Content-Type text/plain;
+  }
+  {%- endif %}
+  {%- if DROP_PHP == 'true' %}
+  location ~ \.php {
+    deny all;
+  }
+  {%- endif %}
+  {%- if STATICS %}
+  {%- for static in STATICS.split(',') %}
+  {% set static_parts = static.split(':') %}
+  location {{ static_parts[0] }} {
+      alias {{ static_parts[1] }};
+      expires {{ env('STATICS_EXPIRES', '1d') }};
+  }
+  {%- endfor %}
+  {% endif %}
+  {%- if BASIC_AUTH_ALL == 'true' %}
+  auth_basic "Please log in to proceed";
+  auth_basic_user_file /etc/nginx/htpasswd;
+  {%- endif %}
+  {%- if HTTPS_REDIRECT == 'true' and DEV_SSL_CERT != 'true' %}
+  if ($http_x_forwarded_proto != "https") {
+    return 301 https://$host$request_uri;
+  }
+  {%- endif %}
+  {%- if UPSTREAMS %}
+  {%- for upstream in UPSTREAMS.split(',') %}
+  {% set upstream_parts = upstream.split(':') %}
+  location {{ upstream_parts[0] }} {
+    {%- if UPSTREAMS and BASIC_AUTH_LOCATIONS %}
+    {%- for auth_location in BASIC_AUTH_LOCATIONS.split(',') %}
+    {%- if auth_location == upstream_parts[0] %}
+    auth_basic "Please log in to proceed";
+    auth_basic_user_file /etc/nginx/htpasswd;
+    {% endif %}
+    {%- endfor %}
+    {%- endif %}
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $remote_addr;
+    {%- if UWSGI == 'true' %}
+    uwsgi_pass {{loop.index}}_{{ upstream_parts[1] }};
+    include /etc/nginx/uwsgi_params;
+    {%- else %}
+    proxy_pass http://{{loop.index}}_{{ upstream_parts[1] }};
+    {%- endif %}
+    {%- if FLOOD == 'true' %}
+    limit_req zone=flood nodelay;
+    {%- endif %}
+    {%- if BUFFER_OFF == 'true' %}
+    proxy_buffering off;
+    {%- endif %}
+    {% if MICROCACHE == 'true' %}
+    proxy_cache microcache;
+    proxy_cache_valid 200 {{ env('MICROCACHE_TIMEOUT', "1s") }};
+    proxy_cache_use_stale updating;
+    proxy_cache_background_update on;
+    proxy_cache_lock on;
+    {%- endif %}
+  }
+  {%- endfor %}
+  {%- endif %}
+}

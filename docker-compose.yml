@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  proxy:
+    image: tivix/docker-proxy
+    build:
+      context: .
+    ports:
+      - 127.0.0.1:80:80
+      - 127.0.0.1:443:443
+    environment:
+      - UPSTREAMS=/:service_a:80,/service_b:service_b:80,/service_c:service_c:80
+      - STATICS=/statics:/data/statics
+      - HTTPS_REDIRECT=true
+      - BASIC_AUTH_LOCATIONS=/service_c
+      - BASIC_AUTH_USER=user
+      - BASIC_AUTH_PASS=pass
+      - MICROCACHE=true
+      - DEBUG=true
+
+  service_a:
+    image: containous/whoami
+    hostname: service_a
+
+  service_b:
+    image: containous/whoami
+    hostname: service_b
+
+  service_c:
+    image: containous/whoami
+    hostname: service_c

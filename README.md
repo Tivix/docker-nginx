@@ -1,56 +1,46 @@
 docker-nginx
 ============
 
-Nginx based proxy meant to work with uwsgi upstream or proxy_pass
-
-[![Codefresh build status]( https://g.codefresh.io/api/badges/build?repoOwner=Tivix&repoName=docker-nginx&branch=master&pipelineName=tivix%2Fdocker-nginx&accountName=tivix&type=cf-1)]( https://g.codefresh.io/repositories/Tivix/docker-nginx/builds?filter=trigger:build;branch:master;service:5a6097ecd6addc0001813e45~tivix/docker-nginx)
+A meant-for-docker, nginx-based, HTTP proxy for serving static files, forwarding requests to upstreams, as well as local development.
 
 USAGE
 -----
-`docker run -d -p 9080:80 tivix/docker-nginx`
-will start nginx server and server static help page
+```
+proxy:
+  image: tivix/docker-proxy
+  build:
+    context: .
+  ports:
+    - 127.0.0.1:80:80
+  environment:
+    - UPSTREAMS=/api:backend:8000,/:frontend:80
+    - STATICS=/static:/data/static
+```
 
-`docker run -d -p 9080:80 -e "PROXY_TARGETS=target1:8080,target2:8081" -e "PROXY_LOCATIONS=/,target2" tivix/docker-nginx`
-will start nginx and create two location blocks:
-- one for root (where forward to target1 host will be put)
-- second for target2 (where forward to target2 host will be put)
+Some of the envrionment variables available:
+- `UPSTREAMS=/:backend:8000` a comma separated list of \<path\>:\<upstream\>:\<port\>.  Each of those of those elements creates a location block with proxy_pass in it.
+- `STATICS=/static:/data/static` a comma separated list of \<path\>:\<directory\>. Creates a location block with `alias` directive.
+- `HTTPS_REDIRECT=true` enabled a standard, ELB compliant https redirect.
+- `BASIC_AUTH_ALL=true` enables a catch-all basic auth protection. Must be used in conjuction with BASIC_AUTH_USER and BASIC_AUTH_PASS (or AWS Secrets Manager, see below)
+- `BASIC_AUTH_LOCATIONS=/api` enables basic auth protection for selected locations. The paths must be declared in UPSTREAMS first.
+- `AWS_SECRET_PATH` and `AWS_SECRET_KEY` will get the basic auth password from AWS Secrets Manager. Requires standard AWS API access, either via Instance Profile or API keys.
+```
+AWS_SECRET_PATH=staging
+AWS_SECRET_KEY=NGINX_PASSWORD
+AWS_DEFAULT_REGION=us-west-1
+```
+The above will get the password from AWS Secret Manager secret named `staging`, and extract the value of `NGINX_PASSWORD` from it.
+- `GZIP=true` enables standard GZIP compression with some sane defaults
+- `REAL_IP=true` enables parsing of X-Forwarded-For header.
+- `REAL_IP_HEADER=X-Real-Ip` customizes which header to use for real_ip
+- `REAL_IP_CIDRS=10.0.0.0/8,192.168.0.0/16` sets the set_real_ip_from directive
+- `MICROCACHE=true` enables "microcaching". Nginx will cache upstream responses for short ammount of time.
+- `MICROCACHE_TIMEOUT` how long to cache responses for. Defaults to 1s.
+- `DEBUG` makes things verbose
+- `DEV_SSL_CERT` somewhat hacky for now. Adds a `ssl on` listen directive with (currently) hardcoded, self-signed certificate.
+- `WORKER_PROCESSES=auto` number of nginx processes. Access the same values as worker_processes directive.
+- `UWSGI=true` switches proxy_pass to uwsgi_pass
+- `STATS=true` enables nginx stats endpoint under `/nginx_status`
+- `HEALTHCHECK=true` enables simple healthcheck endpoint under `/nginx_health`
 
-Variables
----------
-
-_/vars with default values/_
-
-- UPSTREAMS="name:url:port" (accepts multiple values /comma separated/; it also assumes that upstream is served by uwsgi)
-- UPSTREAMS_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from UPSTREAMS)
-- UPSTREAMS_TIMEOUT=5 (default)
-- UPSTREAMS_FAILS=6 (default)
-- NGINX_PORT=80 (default)
-- NGINX_SERVER_NAME=_ (default)
-- PROXY_TARGETS="url:port" (accepts multiple values /comma separated/)
-- PROXY_LOCATIONS="/" (accepts multiple values /comma separated/; root by default; defines nginx location block for URI; order has to be equal to one from PROXY_TARGETS )
-- STATICS=false
-- STATICS_LOCATION=statics
-- STATS=false (internal nginx_stats on/off)
-- USE_AUTH=false (basic auth on/off)
-- AUTH_USER="user_name"
-- AUTH_PASS="password"
-- BUFFER_OFF="false" (if true it disables proxy_buffering)
-- REAL_IP
-
-Options
--------
-
-### basic auth
-- USE_AUTH=false
-- AUTH_USER=
-- AUTH_PASS=
-
-### turn on internal nginx stats
-- USE_STATS=false
-- STATS_PORT=9080
-
-### turn on OAUTH option _/use in connection with external OAUTH container/_
-- USE_OAUTH=false
-- OAUTH_URL=127.0.0.1
-- OAUTH_PORT=4180
-- OAUTH_NGINX_PORT=80
+...and some others. See the code.

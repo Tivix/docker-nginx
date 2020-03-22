@@ -23,10 +23,10 @@ Some of the envrionment variables available:
 - `HTTPS_REDIRECT=true` enabled a standard, ELB compliant https redirect.
 - `BASIC_AUTH_ALL=true` enables a catch-all basic auth protection. Must be used in conjuction with BASIC_AUTH_USER and BASIC_AUTH_PASS (or AWS Secrets Manager, see below)
 - `BASIC_AUTH_LOCATIONS=/api` enables basic auth protection for selected locations. The paths must be declared in UPSTREAMS first.
-- `AWS_SECRET_PATH` and `AWS_SECRET_KEY` will get the basic auth password from AWS Secrets Manager. Requires standard AWS API access, either via Instance Profile or API keys.
+- `AWS_SM_PATH` and `AWS_SM_KEY` will get the basic auth password from AWS Secrets Manager. Requires standard AWS API access, either via Instance Profile or API keys.
 ```
-AWS_SECRET_PATH=staging
-AWS_SECRET_KEY=NGINX_PASSWORD
+AWS_SM_PATH=staging
+AWS_SM_KEY=NGINX_PASSWORD
 AWS_DEFAULT_REGION=us-west-1
 ```
 The above will get the password from AWS Secret Manager secret named `staging`, and extract the value of `NGINX_PASSWORD` from it.

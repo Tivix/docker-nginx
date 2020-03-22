@@ -14,11 +14,11 @@ if [ ${#} -eq 0 ]; then
   fi
 
   if [ ! -z ${BASIC_AUTH_ALL} ] || [ ! -z ${BASIC_AUTH_LOCATIONS} ]; then
-    if [ ! -z ${BASIC_AUTH_USER} ] && [ ! -z ${AWS_SECRET_PATH} ] && [ -z ${BASIC_AUTH_PASS} ]; then
-      BASIC_AUTH_PASS=$(aws_sm --path "${AWS_SECRET_PATH}" --key "${AWS_SECRET_KEY:-BASIC_AUTH_PASS}")
+    if [ ! -z ${BASIC_AUTH_USER} ] && [ ! -z ${AWS_SM_PATH} ] && [ -z ${BASIC_AUTH_PASS} ]; then
+      BASIC_AUTH_PASS=$(aws_sm --path "${AWS_SM_PATH}" --key "${AWS_SM_KEY:-BASIC_AUTH_PASS}")
     elif [ -z ${BASIC_AUTH_USER} ] || [ -z ${BASIC_AUTH_PASS} ]; then
       echo "Missing basic auth credentials."
-      echo "Set BASIC_AUTH_USER and BASIC_AUTH_PASS or BASIC_AUTH_USER and AWS_SECRET_PATH, AWS_DEFAULT_REGION (and optionally AWS_SECRET_KEY)."
+      echo "Set BASIC_AUTH_USER and BASIC_AUTH_PASS or BASIC_AUTH_USER and AWS_SM_PATH, AWS_DEFAULT_REGION (and optionally AWS_SM_KEY)."
       exit 2
     fi
     echo "${BASIC_AUTH_USER}:$(openssl passwd -crypt ${BASIC_AUTH_PASS})" > /etc/nginx/htpasswd

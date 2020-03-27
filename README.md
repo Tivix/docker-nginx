@@ -40,7 +40,9 @@ The above will get the password from AWS Secret Manager secret named `staging`, 
 - `DEV_SSL_CERT` somewhat hacky for now. Adds a `ssl on` listen directive with (currently) hardcoded, self-signed certificate.
 - `WORKER_PROCESSES=auto` number of nginx processes. Access the same values as worker_processes directive.
 - `UWSGI=true` switches proxy_pass to uwsgi_pass
-- `STATS=true` enables nginx stats endpoint under `/nginx_status`
-- `HEALTHCHECK=true` enables simple healthcheck endpoint under `/nginx_health`
+- `STATS=/stats` creates a stub_status endpoint at the defined path, accessible from 127.0.0.1 only.
+- `STATS_PORT=8080` port the stats endpoint listens at. Defaults to 8080.
+- `HEALTHCHECK=/health` enables simple healthcheck endpoint at the defined path, accessible from 127.0.0.1 only.
+- `HEALTHCHECK_PORT=8080` port the healthcheck listens at. Defaults to 8080.
 
 ...and some others. See the code.

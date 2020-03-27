@@ -11,12 +11,13 @@ services:
     environment:
       - UPSTREAMS=/:service_a:80,/service_b:service_b:80,/service_c:service_c:80
       - STATICS=/statics:/data/statics
-      - HTTPS_REDIRECT=true
+      - HTTPS_REDIRECT=false
       - BASIC_AUTH_LOCATIONS=/service_c
       - BASIC_AUTH_USER=user
       - BASIC_AUTH_PASS=pass
       - MICROCACHE=true
       - DEBUG=true
+      - HEALTHCHECK=/health
 
   service_a:
     image: containous/whoami

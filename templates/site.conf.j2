@@ -9,7 +9,7 @@ upstream {{loop.index}}_{{upstream_parts[1]}} {
 {%- if FLOOD == 'true' %}
 limit_req_zone $binary_remote_addr zone=flood:10m rate={{ env('FLOOD_RATE', "5") }}r/s;
 {% endif %}
-{%- if STATS == 'true' or HEALTHCHECK == 'true' %}
+{%- if STATS or HEALTHCHECK %}
 server {
   {%- if STATS_PORT %}
   listen 127.0.0.1:{{ env('STATS_PORT', '8080') }};
@@ -19,18 +19,17 @@ server {
   listen 127.0.0.1:8080;
   {% endif %}
 
-  {%- if STATS == 'true' %}
+  {%- if STATS %}
   # nginx stats for monitoring
-  location /nginx_status {
+  location {{ STATS }} {
     stub_status on;       # Turn on nginx stats
     access_log   off;     # We do not need logs for stats
     allow 127.0.0.1;      # Security: Only allow access from IP
     deny all;             # Deny requests from the other of the world
   }
   {%- endif %}
-  {%- if HEALTHCHECK == 'true' %}
-  # nginx healthcheck
-  location /nginx_health {
+  {%- if HEALTHCHECK %}
+  location {{ HEALTHCHECK }} {
     access_log off;
     return 200;
   }

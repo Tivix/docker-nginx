@@ -74,6 +74,7 @@ server {
   {%- if DROP_PHP == 'true' %}
   location ~ \.php {
     deny all;
+    access_log off;
   }
   {%- endif %}
   {%- if STATICS %}

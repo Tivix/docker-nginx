@@ -1,7 +1,7 @@
 user  nginx;
 worker_processes {{ env("WORKER_PROCESSES", "1") }};
 
-error_log  /dev/stderr {% if DEBUG == 'true' %}debug{% else %}info{% endif %};
+error_log  /dev/stderr {% if DEBUG == 'true' %}debug{% else %}{{ env("LOG_LEVEL", "notice")}}{% endif %};
 pid        /run/nginx.pid;
 
 events {

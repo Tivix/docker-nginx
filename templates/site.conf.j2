@@ -18,22 +18,20 @@ server {
   {%- else %}
   listen 127.0.0.1:8080;
   {% endif %}
-
-  {%- if STATS %}
-  # nginx stats for monitoring
+  access_log  off;
+  {% if STATS %}
   location {{ STATS }} {
-    stub_status on;       # Turn on nginx stats
-    access_log   off;     # We do not need logs for stats
-    allow 127.0.0.1;      # Security: Only allow access from IP
-    deny all;             # Deny requests from the other of the world
+    stub_status on;
   }
   {%- endif %}
   {%- if HEALTHCHECK %}
   location {{ HEALTHCHECK }} {
-    access_log off;
     return 200;
   }
   {%- endif %}
+  location / {
+    return 404;
+  }
 }
 {%- endif %}
 

@@ -9,15 +9,17 @@ services:
       - 127.0.0.1:80:80
       - 127.0.0.1:443:443
     environment:
-      - UPSTREAMS=/:service_a:80,/service_b:service_b:80,/service_c:service_c:80
+      - UPSTREAMS=/:service_a:80,/service_b:service_b:80
       - STATICS=/statics:/data/statics
+      - REAL_IP_CIDRS=172.16.0.0/12
       - HTTPS_REDIRECT=false
-      - BASIC_AUTH_LOCATIONS=/service_c
+      - BASIC_AUTH_LOCATIONS=/service_b
       - BASIC_AUTH_USER=user
       - BASIC_AUTH_PASS=pass
       - MICROCACHE=true
       - DEBUG=true
       - HEALTHCHECK=/health
+      - STATS=/stats
 
   service_a:
     image: containous/whoami
@@ -26,7 +28,3 @@ services:
   service_b:
     image: containous/whoami
     hostname: service_b
-
-  service_c:
-    image: containous/whoami
-    hostname: service_c

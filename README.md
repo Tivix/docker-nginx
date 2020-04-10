@@ -18,6 +18,7 @@ proxy:
 ```
 
 Some of the envrionment variables available:
+- `MAINTENANCE=true` nginx sets root to static html page; set true to activate, delete var to deactivate
 - `UPSTREAMS=/:backend:8000` a comma separated list of \<path\>:\<upstream\>:\<port\>.  Each of those of those elements creates a location block with proxy_pass in it.
 - `STATICS=/static:/data/static` a comma separated list of \<path\>:\<directory\>. Creates a location block with `alias` directive.
 - `HTTPS_REDIRECT=true` enabled a standard, ELB compliant https redirect.

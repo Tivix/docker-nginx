@@ -92,7 +92,15 @@ server {
     return 301 https://$host$request_uri;
   }
   {%- endif %}
-  {%- if UPSTREAMS %}
+
+  {% if MAINTENANCE and MAINTENANCE == 'true' %}
+  root /var/www/html;
+
+  location / {
+    index index.html;
+  }
+  {%- endif %}
+  {%- if UPSTREAMS and not (MAINTENANCE and MAINTENANCE == 'true') %}
   {%- for upstream in UPSTREAMS.split(',') %}
   {% set upstream_parts = upstream.split(':') %}
   location {{ upstream_parts[0] }} {

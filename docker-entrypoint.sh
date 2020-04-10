@@ -13,6 +13,10 @@ if [ ${#} -eq 0 ]; then
     cp /code/conf/uwsgi_params /etc/nginx/uwsgi_params
   fi
 
+  if [ "${MAINTENANCE}" == "true" ]; then
+    cp -vr /code/html /var/www/
+  fi
+
   if [ ! -z ${BASIC_AUTH_ALL} ] || [ ! -z ${BASIC_AUTH_LOCATIONS} ]; then
     if [ ! -z ${BASIC_AUTH_USER} ] && [ ! -z ${AWS_SM_PATH} ] && [ -z ${BASIC_AUTH_PASS} ]; then
       BASIC_AUTH_PASS=$(aws_sm --path "${AWS_SM_PATH}" --key "${AWS_SM_KEY:-BASIC_AUTH_PASS}")

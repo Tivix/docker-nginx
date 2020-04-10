@@ -83,6 +83,14 @@ server {
   }
   {%- endfor %}
   {% endif %}
+  {%- if UPLOADS %}
+  {%- for upload in UPLOADS.split(',') %}
+  {% set upload_parts = upload.split(':') %}
+  location {{ upload_parts[0] }} {
+      alias {{ upload_parts[1] }};
+  }
+  {%- endfor %}
+  {% endif %}
   {%- if BASIC_AUTH_ALL == 'true' %}
   auth_basic "Please log in to proceed";
   auth_basic_user_file /etc/nginx/htpasswd;

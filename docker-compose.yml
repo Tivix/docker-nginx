@@ -10,6 +10,7 @@ services:
       - 127.0.0.1:443:443
     environment:
       - UPSTREAMS=/:service_a:80,/service_b:service_b:80
+      - 'LOCATION_EXTRAS=/service_b:root /var/www;'
       - STATICS=/statics:/data/statics
       - REAL_IP_CIDRS=172.16.0.0/12
       - HTTPS_REDIRECT=false

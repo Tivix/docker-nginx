@@ -1,6 +1,6 @@
 {%- if UPSTREAMS %}
 {%- for upstream in UPSTREAMS.split(',') -%}
-{% set upstream_parts = upstream.split(':') %}
+{%- set upstream_parts = upstream.split(':') %}
 upstream {{loop.index}}_{{upstream_parts[1]}} {
   server {{upstream_parts[1]}}:{{upstream_parts[2]}}{% if UPSTREAMS_TIMEOUT %} fail_timeout={{ UPSTREAMS_TIMEOUT }}{% endif %}{% if UPSTREAMS_FAILS %} max_fails={{ UPSTREAMS_FAILS }}{% endif %};
 }
@@ -76,7 +76,7 @@ server {
   {%- endif %}
   {%- if STATICS %}
   {%- for static in STATICS.split(',') %}
-  {% set static_parts = static.split(':') %}
+  {%- set static_parts = static.split(':') %}
   location {{ static_parts[0] }} {
       alias {{ static_parts[1] }};
       expires {{ env('STATICS_EXPIRES', '1d') }};
@@ -85,7 +85,7 @@ server {
   {% endif %}
   {%- if UPLOADS %}
   {%- for upload in UPLOADS.split(',') %}
-  {% set upload_parts = upload.split(':') %}
+  {%- set upload_parts = upload.split(':') %}
   location {{ upload_parts[0] }} {
       alias {{ upload_parts[1] }};
   }
@@ -110,14 +110,22 @@ server {
   {%- endif %}
   {%- if UPSTREAMS and MAINTENANCE != 'true' %}
   {%- for upstream in UPSTREAMS.split(',') %}
-  {% set upstream_parts = upstream.split(':') %}
+  {%- set upstream_parts = upstream.split(':') %}
   location {{ upstream_parts[0] }} {
+    {%- if UPSTREAMS and LOCATION_EXTRAS %}
+    {%- for location_extra in LOCATION_EXTRAS.split(',') %}
+    {%- set location_extra_parts = location_extra.split(':') %}
+    {%- if location_extra_parts[0] == upstream_parts[0] %}
+    {{ location_extra_parts[1] }}
+    {%- endif %}
+    {%- endfor %}
+    {%- endif %}
     {%- if UPSTREAMS and BASIC_AUTH_LOCATIONS %}
     {%- for auth_location in BASIC_AUTH_LOCATIONS.split(',') %}
     {%- if auth_location == upstream_parts[0] %}
     auth_basic "Please log in to proceed";
     auth_basic_user_file /etc/nginx/htpasswd;
-    {% endif %}
+    {%- endif %}
     {%- endfor %}
     {%- endif %}
     proxy_set_header Host $host;
@@ -143,6 +151,6 @@ server {
     proxy_cache_lock on;
     {%- endif %}
   }
-  {%- endfor %}
+  {% endfor %}
   {%- endif %}
 }

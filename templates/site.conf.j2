@@ -12,11 +12,11 @@ limit_req_zone $binary_remote_addr zone=flood:10m rate={{ env('FLOOD_RATE', "5")
 {%- if STATS or HEALTHCHECK %}
 server {
   {%- if STATS_PORT %}
-  listen 127.0.0.1:{{ env('STATS_PORT', '8080') }};
+  listen {{ env('HEALTHCHECK_LISTEN', '127.0.0.1') }}:{{ env('STATS_PORT', '8080') }};
   {%- elif HEALTHCHECK_PORT %}
-  listen 127.0.0.1:{{ env('HEALTHCHECK_PORT', '8080') }};
+  listen {{ env('HEALTHCHECK_LISTEN', '127.0.0.1') }}:{{ env('HEALTHCHECK_PORT', '8080') }};
   {%- else %}
-  listen 127.0.0.1:8080;
+  listen {{ env('HEALTHCHECK_LISTEN', '127.0.0.1') }}:8080;
   {% endif %}
   access_log  off;
   {% if STATS %}

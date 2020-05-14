@@ -46,5 +46,6 @@ The above will get the password from AWS Secret Manager secret named `staging`, 
 - `STATS_PORT=8080` port the stats endpoint listens at. Defaults to 8080.
 - `HEALTHCHECK=/health` enables simple healthcheck endpoint at the defined path, accessible from 127.0.0.1 only. Think Docker healthcheck-cmd `curl -sSf 127.0.0.1:8080/health`
 - `HEALTHCHECK_PORT=8080` port the healthcheck listens at. Defaults to 8080.
+- `HEALTHCHECK_LISTEN=127.0.0.1` IP address the healthcheck listens on. Defaults to 127.0.0.1.
 
 ...and some others. See the code.

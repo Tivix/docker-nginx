@@ -20,6 +20,7 @@ services:
       - MICROCACHE=true
       - DEBUG=true
       - HEALTHCHECK=/health
+      - HEALTHCHECK_LISTEN=0.0.0.0
       - STATS=/stats
 
   service_a:

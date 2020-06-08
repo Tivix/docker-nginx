@@ -28,6 +28,8 @@ http {
   {%- endfor %}
   {% endif %}
   keepalive_timeout  {{ env("KEEPALIVE_TIMEOUT", "65") }};
+  proxy_read_timeout {{ env("PROXY_READ_TIMEOUT", "60s") }};
+  proxy_send_timeout {{ env("PROXY_SEND_TIMEOUT", "60s") }};
   client_max_body_size {{ env("CLIENT_MAX_BODY_SIZE", "1m") }};
   {% if GZIP == 'true' %}
   gzip        on;

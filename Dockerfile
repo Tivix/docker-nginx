@@ -1,7 +1,7 @@
-FROM alpine:3.11
+FROM alpine:3.12
 
 RUN apk add --no-cache\
-    nginx~=1.16 \
+    nginx~=1.18 \
     py3-pip \
     curl \
     openssl &&\

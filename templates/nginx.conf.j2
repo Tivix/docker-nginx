@@ -39,5 +39,13 @@ http {
   gzip_proxied any;
   gzip_min_length 250;
   {% endif %}
+  map $http_x_forwarded_proto $proxy_x_forwarded_proto {
+    default $http_x_forwarded_proto;
+    ''      $scheme;
+  }
+  map $http_x_forwarded_port $proxy_x_forwarded_port {
+    default $http_x_forwarded_port;
+    ''      $server_port;
+  }
   include /etc/nginx/conf.d/*.conf;
 }

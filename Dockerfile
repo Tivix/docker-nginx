@@ -4,6 +4,7 @@ RUN apk add --no-cache\
     nginx~=1.18 \
     py3-pip \
     curl \
+    perl \
     openssl &&\
     pip3 install --no-cache-dir \
     j2cli==0.3.10 \

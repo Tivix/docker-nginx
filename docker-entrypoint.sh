@@ -15,7 +15,8 @@ if [ ${#} -eq 0 ]; then
 
   if [ "${MAINTENANCE}" == "true" ]; then
     cp -vr /code/html /var/www/
-    perl -p -i -e "s/Welcome/Welcome from host ${HOSTNAME}/" /var/www/html/index.html
+    #perl -p -i -e "s/Welcome/Welcome from host ${HOSTNAME}/" /var/www/html/index.html
+    perl -p -i -e "s/back later/back later<p>${HOSTNAME} container and ${HOST} host and ${HOST_SYSTEM} system<BR \/>Message of the day:<BR \/>${MOTD}<BR \/><BR \/>lastlog:<font size="-10"><BR \/>\'${LASTLOG}\'<\/font>/" /var/www/html/index.html
   fi
 
   if [ ! -z ${BASIC_AUTH_ALL} ] || [ ! -z ${BASIC_AUTH_LOCATIONS} ]; then

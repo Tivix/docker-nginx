@@ -6,6 +6,18 @@ upstream {{loop.index}}_{{upstream_parts[1]}} {
 }
 {% endfor %}
 {%- endif %}
+
+{%- if BASIC_AUTH_ALL == 'true' %}
+map $uri $auth_type {
+    default "Please log in to proceed";
+{%- if EXCLUDE_BASIC_AUTH_PATHS %}
+{%- for path in EXCLUDE_BASIC_AUTH_PATHS.split(',') %}
+    ~*/{{ path }} "off";
+{%- endfor %}
+{%- endif %}
+}
+{%- endif %}
+
 {%- if FLOOD == 'true' %}
 limit_req_zone $binary_remote_addr zone=flood:10m rate={{ env('FLOOD_RATE', "5") }}r/s;
 {% endif %}
@@ -92,7 +104,7 @@ server {
   {%- endfor %}
   {% endif %}
   {%- if BASIC_AUTH_ALL == 'true' %}
-  auth_basic "Please log in to proceed";
+  auth_basic $auth_type;
   auth_basic_user_file /etc/nginx/htpasswd;
   {%- endif %}
   {%- if HTTPS_REDIRECT == 'true' and DEV_SSL_CERT != 'true' %}

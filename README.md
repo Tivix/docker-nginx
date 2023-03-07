@@ -7,7 +7,7 @@ USAGE
 -----
 ```
 proxy:
-  image: tivix/docker-proxy
+  image: tivix/docker-nginx
   build:
     context: .
   ports:

@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   proxy:
-    image: tivix/docker-proxy
+    image: tivix/docker-nginx
     build:
       context: .
     ports:

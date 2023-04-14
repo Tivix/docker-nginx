@@ -39,6 +39,9 @@ http {
   gzip_proxied any;
   gzip_min_length 250;
   {% endif %}
+  {% if NOSNIFF == 'true' %}
+  add_header X-Content-Type-Options nosniff;
+  {% endif %}
   map $http_x_forwarded_proto $proxy_x_forwarded_proto {
     default $http_x_forwarded_proto;
     ''      $scheme;

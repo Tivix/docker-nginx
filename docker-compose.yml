@@ -22,6 +22,7 @@ services:
       - HEALTHCHECK=/health
       - HEALTHCHECK_LISTEN=0.0.0.0
       - STATS=/stats
+      - NOSNIFF=true
 
   service_a:
     image: containous/whoami

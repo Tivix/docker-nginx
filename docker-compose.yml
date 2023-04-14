@@ -23,6 +23,15 @@ services:
       - HEALTHCHECK_LISTEN=0.0.0.0
       - STATS=/stats
       - NOSNIFF=true
+      - CSP=true
+      - CSP_SCRIPT_SRC=script-src.com
+      - CSP_STYLE_SRC=style-src.com
+      - CSP_IMG_SRC=img-src.com
+      - CSP_CONNECT_SRC=connect-src.com
+      - CSP_FONT_SRC=font-src.com
+      - CSP_OBJECT_SRC=object-src.com
+      - CSP_MEDIA_SRC=media-src.com
+      - CSP_FRAME_SRC=frame-src.com
 
   service_a:
     image: containous/whoami

@@ -42,6 +42,11 @@ http {
   {% if NOSNIFF == 'true' %}
   add_header X-Content-Type-Options nosniff;
   {% endif %}
+  {% if CSP == 'true' %}
+  # check https://content-security-policy.com/ for more info
+  add_header Content-Security-Policy "default-src 'self' {{ env("CSP_DEFAULT_SRC", "") }}; script-src 'self' {{ env("CSP_SCRIPT_SRC", "") }}; style-src 'self' {{ env("CSP_STYLE_SRC", "") }}; img-src 'self' {{ env("CSP_IMG_SRC", "") }}; connect-src 'self' {{ env("CSP_CONNECT_SRC", "") }}; font-src 'self' {{ env("CSP_FONT_SRC", "") }}; object-src 'self' {{ env("CSP_OBJECT_SRC", "") }}; media-src 'self' {{ env("CSP_MEDIA_SRC", "") }}; frame-src 'self' {{ env("CSP_FRAME_SRC", "") }};
+  " always;
+  {% endif %}
   map $http_x_forwarded_proto $proxy_x_forwarded_proto {
     default $http_x_forwarded_proto;
     ''      $scheme;

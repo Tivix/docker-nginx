@@ -32,6 +32,9 @@ services:
       - CSP_OBJECT_SRC=object-src.com
       - CSP_MEDIA_SRC=media-src.com
       - CSP_FRAME_SRC=frame-src.com
+    depends_on:
+      - service_a
+      - service_b
 
   service_a:
     image: containous/whoami

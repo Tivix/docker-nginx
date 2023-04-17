@@ -3,7 +3,7 @@
 mkdir -p /run/nginx/
 rm -rf /run/nginx/nginx.pid
 
-if [ ${#} -eq 0 ]; then
+if [ "${#}" -eq 0 ] || [ "${1}" == "test" ]; then
   echo "Starting docker-nginx"
 
   j2 --undefined /code/templates/nginx.conf.j2 > /etc/nginx/nginx.conf
@@ -38,8 +38,13 @@ if [ ${#} -eq 0 ]; then
       cat ${i}
     done
   fi
-  echo "Starting nginx"
-  exec nginx -g 'daemon off;'
+  
+  if [ "${1}" == "test" ]; then
+    nginx -t
+  else
+    echo "Starting nginx"
+    exec nginx -g 'daemon off;'
+  fi
 else
   exec "${@}"
 fi

@@ -49,5 +49,6 @@ The above will get the password from AWS Secret Manager secret named `staging`, 
 - `HEALTHCHECK_LISTEN=127.0.0.1` IP address the healthcheck listens on. Defaults to 127.0.0.1.
 - `NOSNIFF=true` enables X-Content-Type-Options: nosniff. Defaults to `false`.
 - `CSP=true` enables Content Security Policy. Defaults to `false`.
+- `CLEAR_SERVER_HEADER` removes the `Server` header from responses. Defaults to `true`.
 
 ...and some others. See the code.

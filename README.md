@@ -11,9 +11,9 @@ proxy:
   ports:
     - 127.0.0.1:80:80
   environment:
-    # Point paths to your backend containers
+    # Point paths (<path>:<container>:<port>) to your backend containers
     - UPSTREAMS=/api:backend:8000,/:frontend:80
-    # Point paths to static files server directly by nginx
+    # Point paths (<path>:<some-dir-in-docker-nginx-container>) to static files server directly by nginx
     - STATICS=/static:/data/static
 ```
 

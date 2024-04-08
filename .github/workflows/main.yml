@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - v*
+    branches:
+      - trivy
     
 jobs:
   main:
@@ -14,14 +16,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Prepare docker buildx
         uses: docker/setup-buildx-action@v2
-      - name: Login to ghcr.io
-        run: echo "${{ secrets.DOCKER_HUB_PASS }}" | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
       - name: Build Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: tivix/docker-nginx:${{ github.sha }}, tivix/docker-nginx:${{ env.CI_REF_NAME }}

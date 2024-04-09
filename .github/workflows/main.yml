@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - v*
-    
+
 jobs:
   main:
     runs-on: ubuntu-22.04
@@ -21,16 +21,27 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: true
+          push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: tivix/docker-nginx:${{ github.sha }}, tivix/docker-nginx:${{ env.CI_REF_NAME }}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'tivix/docker-nginx:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
+          image-ref: "tivix/docker-nginx:${{ github.sha }}"
+          format: "table"
+          exit-code: "1"
           ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          vuln-type: "os,library"
+          severity: "CRITICAL,HIGH"
+          security-checks: "vuln"
+          hide-progress: true
+      - name: Build Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: tivix/docker-nginx:${{ github.sha }}, tivix/docker-nginx:${{ env.CI_REF_NAME }}

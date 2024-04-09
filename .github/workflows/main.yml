@@ -25,3 +25,12 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: tivix/docker-nginx:${{ github.sha }}, tivix/docker-nginx:${{ env.CI_REF_NAME }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'tivix/docker-nginx:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'

@@ -2,7 +2,7 @@ FROM alpine:3.17
 
 RUN apk add --no-cache\
     'nginx~=1.22' \
-    'nginx-mod-http-headers-more==1.22.1-r0' \
+    'nginx-mod-http-headers-more==1.22.1-r1' \
     'py3-pip~=22.3.1' &&\
     pip3 install --no-cache-dir \
     j2cli==0.3.10 \

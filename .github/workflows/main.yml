@@ -8,6 +8,9 @@ on:
 jobs:
   main:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Checkout

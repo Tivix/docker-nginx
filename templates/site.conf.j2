@@ -54,6 +54,14 @@ server {
 }
 {%- endif %}
 
+{%- if IP_REDIRECT == 'true' %}
+server {
+  listen 0.0.0.0:{{ env('NGINX_PORT', '80') }};
+  server_name {{ IP_SERVER }};
+  return 301 https://{{ IP_DOMAIN }}$request_uri;
+}
+{%- endif %}
+
 {%- if MICROCACHE == 'true' %}
 proxy_cache_path /cache levels=1:2 keys_zone=microcache:100m max_size=100m inactive=1h use_temp_path=off;
 {%- endif %}

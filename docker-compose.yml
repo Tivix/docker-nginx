@@ -32,6 +32,9 @@ services:
       - CSP_OBJECT_SRC=object-src.com
       - CSP_MEDIA_SRC=media-src.com
       - CSP_FRAME_SRC=frame-src.com
+      - IP_REDIRECT=false
+      - IP_SERVER=123.123.123.123
+      - IP_DOMAIN=example.com
     depends_on:
       - service_a
       - service_b
